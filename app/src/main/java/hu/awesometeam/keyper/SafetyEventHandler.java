@@ -27,6 +27,7 @@ public class SafetyEventHandler {
         String matchString;
         String OTP;
         long OTPTTL;
+
         @Override
         public String toString() {
             return "InternalState{" +
@@ -35,9 +36,12 @@ public class SafetyEventHandler {
                     ", enteredText='" + enteredText + '\'' +
                     ", shown=" + shown +
                     ", matchString='" + matchString + '\'' +
+                    ", OTP='" + OTP + '\'' +
+                    ", OTPTTL=" + OTPTTL +
                     '}';
         }
     }
+
     InternalState state = new InternalState();
 
     private static SafetyEventHandler handler;
@@ -46,14 +50,14 @@ public class SafetyEventHandler {
         this.vault = PasswordVault.getInstance(context);
     }
 
-    public static SafetyEventHandler getInstance(Context context){
-        if(handler == null) handler = new SafetyEventHandler(context);
+    public static SafetyEventHandler getInstance(Context context) {
+        if (handler == null) handler = new SafetyEventHandler(context);
         return handler;
     }
 
 
     public void textUpdatedEvent(String text, Context context) {
-        if(!Objects.equals(text, state.enteredText)) {
+        if (!Objects.equals(text, state.enteredText)) {
             state.enteredText = text;
             this.checkAlertCondition(context);
         }
@@ -62,7 +66,7 @@ public class SafetyEventHandler {
     }
 
     public void urlUpdatedEvent(String url, Context context) {
-        if(!Objects.equals(url, state.browserUrl)) {
+        if (!Objects.equals(url, state.browserUrl)) {
             state.browserUrl = url;
             state.shown = false;
         }
@@ -70,7 +74,7 @@ public class SafetyEventHandler {
     }
 
     public void packageEvent(String packageString, Context context) {
-        if(!Objects.equals(packageString, state.packageName)) {
+        if (!Objects.equals(packageString, state.packageName)) {
             state.packageName = packageString;
             state.browserUrl = null;
             state.enteredText = null;
@@ -80,9 +84,9 @@ public class SafetyEventHandler {
     }
 
     public void notificationEvent(String text, Context context) {
-        if(text == null ||(text.length()==0)) return;
-        if(text.toLowerCase().contains("code")){
-            if (text.matches(".*d{3}.*")){
+        if (text == null || (text.length() == 0)) return;
+        if (text.toLowerCase().contains("code")) {
+            if (text.matches(".*\\d{3}.*")) {
                 Matcher m = java.util.regex.Pattern.compile("(\\d{3}[\\d\\-]*)").matcher(text);
                 if (m.find()) {
                     state.OTP = m.group(1);
@@ -90,15 +94,12 @@ public class SafetyEventHandler {
                     Toast.makeText(context, "Security code detected: " + state.OTP, Toast.LENGTH_SHORT).show();
                 }
             }
-            ///
         }
-
-
     }
 
     public void checkAlertCondition(Context context) {
         Log.d("SEH", "CAC1 " + state.toString());
-        if(state.enteredText.length() >= 3) {
+        if (state.enteredText.length() >= 3) {
             String[] result = vault.checkIfMatch(state.enteredText);
             if (result != null) {
                 if (state.shown && Objects.equals(state.matchString, result[0])) {
@@ -143,8 +144,8 @@ public class SafetyEventHandler {
                     }
                 });
             } else {
-                if(state.OTP != null && state.OTPTTL > System.currentTimeMillis()){
-                    if(state.enteredText.contains(state.OTP) && state.enteredText.length()>3){
+                if (state.OTP != null && state.OTPTTL > System.currentTimeMillis()) {
+                    if (state.enteredText.contains(state.OTP) && state.enteredText.length() > 3) {
                         Toast.makeText(context, "OTP MATCH", Toast.LENGTH_SHORT).show();
                         //state.OTP = null;
                         //state.OTPTTL = 0;
@@ -192,9 +193,6 @@ public class SafetyEventHandler {
         alertDialog.show();
 
     }
-
-
-
 
 
 }

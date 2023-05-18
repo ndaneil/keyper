@@ -28,14 +28,13 @@ public class SettingsActivity extends AppCompatActivity {
     private static final int OVERLAY_PERM_CODE = 101;
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
-                if (isGranted.values().stream().allMatch(e-> e)) {
-                    Toast.makeText(getApplicationContext(),"File access granted",Toast.LENGTH_SHORT).show();
-                    Log.i("permissions:" ,"granted");
+                if (isGranted.values().stream().allMatch(e -> e)) {
+                    Toast.makeText(getApplicationContext(), "File access granted", Toast.LENGTH_SHORT).show();
+                    Log.i("permissions:", "granted");
                 } else {
-                    Log.i("permission:","denied");
+                    Log.i("permission:", "denied");
                 }
             });
-
 
 
     @Override
@@ -55,21 +54,17 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.tvCheckNotif).setOnClickListener(view ->
                 startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)));
         findViewById(R.id.tvCheckSave).setOnClickListener(view -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-            {
-                try
-                {
-                    Uri uri = Uri.parse("package:" +getApplicationContext().getPackageName());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                try {
+                    Uri uri = Uri.parse("package:" + getApplicationContext().getPackageName());
                     Intent intent = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION, uri);
-                    Log.i("permission","action_mng_all_files");
+                    Log.i("permission", "action_mng_all_files");
                     startActivity(intent);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Intent intent = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                     startActivity(intent);
                 }
-            }else{
+            } else {
                 String[] PERMISSIONS;
                 PERMISSIONS = new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
                 Log.i("permission", " trying the old way");
@@ -78,19 +73,16 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.tvCheckOverlay).setOnClickListener(view -> {
-            if (!Settings.canDrawOverlays(getApplicationContext())){
+            if (!Settings.canDrawOverlays(getApplicationContext())) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getApplicationContext().getPackageName()));
                 startActivityForResult(intent, OVERLAY_PERM_CODE);
-            }else{
-                Toast.makeText(getApplicationContext(),"Overlay permission already granted",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Overlay permission already granted", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-
-
-
 
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -147,8 +139,7 @@ public class SettingsActivity extends AppCompatActivity {
                         status.setTitle("DB load succeeded");
                     }
                 }
-            }
-            else if (requestCode == OVERLAY_PERM_CODE) {
+            } else if (requestCode == OVERLAY_PERM_CODE) {
                 if (!Settings.canDrawOverlays(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity(), "Permission not granted", Toast.LENGTH_SHORT).show();
                 }

@@ -32,12 +32,12 @@ public class SafetyService extends AccessibilityService {
                         .urlUpdatedEvent(getCurrentUrl(rootNode), getApplicationContext());
             }
         }
-        if(event.getEventType()== AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED){
+        if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
             AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-            Log.d("AccService","rootNode.getText()" + rootNode.getText());
+            Log.d("AccService", "rootNode.getText()" + rootNode.getText());
             SafetyEventHandler.getInstance(getApplicationContext())
                     .textUpdatedEvent(event.getText().toString(), getApplicationContext());
-            Log.d("AccService", "TypedText: "+event.getText().toString());
+            Log.d("AccService", "TypedText: " + event.getText().toString());
         }
 
     }
@@ -55,6 +55,7 @@ public class SafetyService extends AccessibilityService {
         }
         return "";
     }
+
     private AccessibilityNodeInfo findAddressBarNode(AccessibilityNodeInfo rootNode) {
         if (rootNode == null) {
             return null;
@@ -63,7 +64,7 @@ public class SafetyService extends AccessibilityService {
         if (rootNode.getPackageName() == null) {
             return null;
         }
-        if(Objects.equals((String) rootNode.getPackageName(), "com.android.chrome")){
+        if (Objects.equals((String) rootNode.getPackageName(), "com.android.chrome")) {
             ///TODO find on seperate thread maybe
             addressBars = rootNode.findAccessibilityNodeInfosByViewId("com.android.chrome:id/url_bar");
         }
@@ -72,6 +73,7 @@ public class SafetyService extends AccessibilityService {
         }
         return addressBars.get(0);
     }
+
     public static void logViewHierarchy(AccessibilityNodeInfo nodeInfo, final int depth) {
 
         if (nodeInfo == null) return;
@@ -82,18 +84,17 @@ public class SafetyService extends AccessibilityService {
             spacerString += '-';
         }
         //Log the info you care about here... I choce classname and view resource name, because they are simple, but interesting.
-        if(nodeInfo.getClassName().equals("android.widget.EditText")) {
+        if (nodeInfo.getClassName().equals("android.widget.EditText")) {
             Log.d("TAG", spacerString + nodeInfo.getClassName() + " " + nodeInfo.getViewIdResourceName());
-            Log.d("TAG", " " +spacerString + nodeInfo.getClassName() +nodeInfo.getText());
-            Log.d("TAG", " " +spacerString + nodeInfo.getClassName() +nodeInfo.findFocus(AccessibilityNodeInfo.FOCUS_INPUT));
+            Log.d("TAG", " " + spacerString + nodeInfo.getClassName() + nodeInfo.getText());
+            Log.d("TAG", " " + spacerString + nodeInfo.getClassName() + nodeInfo.findFocus(AccessibilityNodeInfo.FOCUS_INPUT));
 
 
         }
         for (int i = 0; i < nodeInfo.getChildCount(); ++i) {
-            logViewHierarchy(nodeInfo.getChild(i), depth+1);
+            logViewHierarchy(nodeInfo.getChild(i), depth + 1);
         }
     }
-
 
 
 }

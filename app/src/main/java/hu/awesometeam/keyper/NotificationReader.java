@@ -13,24 +13,28 @@ import java.util.Objects;
 
 public class NotificationReader extends NotificationListenerService {
     private static final boolean ignoreMedia = true;
+
     public NotificationReader() {
         super();
     }
+
     @Override
     public IBinder onBind(Intent intent) {
         return super.onBind(intent);
     }
+
     @Override
-    public void onNotificationPosted(StatusBarNotification sbn){
-        if(Objects.equals(sbn.getNotification().category, "msg")) {
+    public void onNotificationPosted(StatusBarNotification sbn) {
+        if (Objects.equals(sbn.getNotification().category, "msg")) {
             Bundle extras = sbn.getNotification().extras;
             String s = extras.get(Notification.EXTRA_TEXT) == null ? null : extras.get(Notification.EXTRA_TEXT).toString();
             Log.d("NotificationReceiver", "Received: " + sbn.getNotification().category + " " + s);
-
+            SafetyEventHandler.getInstance(getApplicationContext()).notificationEvent(s, getApplicationContext());
         }
     }
+
     @Override
-    public void onNotificationRemoved(StatusBarNotification sbn){
+    public void onNotificationRemoved(StatusBarNotification sbn) {
 
     }
 }
