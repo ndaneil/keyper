@@ -32,4 +32,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Keepass">
+            <Preference
+                app:key="pref_keepass_open"
+                app:title="Select keepass path" />
+            <EditTextPreference
+                app:key="pref_keepass_password"
+                app:title="Password"
+                app:defaultValue="" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
