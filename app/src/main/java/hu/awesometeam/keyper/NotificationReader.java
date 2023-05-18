@@ -9,6 +9,8 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
+import java.util.Objects;
+
 public class NotificationReader extends NotificationListenerService {
     private static final boolean ignoreMedia = true;
     public NotificationReader() {
@@ -20,7 +22,7 @@ public class NotificationReader extends NotificationListenerService {
     }
     @Override
     public void onNotificationPosted(StatusBarNotification sbn){
-        if(sbn.getNotification().category.equals("msg")) {
+        if(Objects.equals(sbn.getNotification().category, "msg")) {
             Bundle extras = sbn.getNotification().extras;
             String s = extras.get(Notification.EXTRA_TEXT) == null ? null : extras.get(Notification.EXTRA_TEXT).toString();
             Log.d("NotificationReceiver", "Received: " + sbn.getNotification().category + " " + s);
