@@ -13,8 +13,9 @@ public class SafetyEventHandler {
 
     }
 
-    public static void getInstance(Context context){
+    public static SafetyEventHandler getInstance(Context context){
         if(handler == null) handler = new SafetyEventHandler(context);
+        return handler;
     }
 
 

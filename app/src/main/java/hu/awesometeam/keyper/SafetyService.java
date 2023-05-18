@@ -9,30 +9,32 @@ import java.util.List;
 import java.util.Objects;
 
 public class SafetyService extends AccessibilityService {
-    private String lastUrl = "";
-
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        ///TODO init
         Log.i("AccService", "onServiceConnected");
     }
 
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED ||
                 event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            ///send event package
+            SafetyEventHandler.getInstance(getApplicationContext())
+                    .packageEvent(event.getPackageName().toString(), getApplicationContext());
+
             AccessibilityNodeInfo rootNode = getRootInActiveWindow();
             if (rootNode != null) {
-                String currentUrl = getCurrentUrl(rootNode);
-                if(!currentUrl.equals("")){
-                    lastUrl = currentUrl;
-                    Log.d("AccService", "lastUrl: " + lastUrl);
-                }
+                SafetyEventHandler.getInstance(getApplicationContext())
+                        .urlUpdatedEvent(getCurrentUrl(rootNode), getApplicationContext());
             }
         }
         if(event.getEventType()== AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED){
-            AccessibilityNodeInfo rootNode = getRootInActiveWindow();
+            SafetyEventHandler.getInstance(getApplicationContext())
+                    .textUpdatedEvent(event.getText().toString(), getApplicationContext());
             Log.d("AccService", "TypedText: "+event.getText().toString());
         }
 
@@ -40,6 +42,7 @@ public class SafetyService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
+        Log.i("AccService", "Interrupted");
         // Handle accessibility interruption if needed
     }
 
