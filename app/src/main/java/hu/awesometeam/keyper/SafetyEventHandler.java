@@ -99,6 +99,13 @@ public class SafetyEventHandler {
 
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
+                        /**
+                         * Hostname matching rules
+                         */
+                        if (state.browserUrl.equals(state.browserUrl.toLowerCase())) {
+                            Toast.makeText(context, "URL match. skipping...", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                     }
                 }
 
@@ -110,7 +117,7 @@ public class SafetyEventHandler {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(context, "MATCH:" + result + " package:" + state.packageName, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "MATCH:" + result[0] + " package:" + state.packageName, Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
@@ -123,6 +130,9 @@ public class SafetyEventHandler {
         }
         Log.d("SEH", "CAC2 " + state.toString());
     }
+
+
+
 
 
 
