@@ -10,11 +10,10 @@ import java.util.Objects;
 
 public class SafetyService extends AccessibilityService {
     private String lastUrl = "";
-    PasswordVault vault;
+
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-        vault = PasswordVault.getInstance(this);
         Log.i("AccService", "onServiceConnected");
     }
 
