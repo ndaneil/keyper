@@ -1,15 +1,20 @@
 package hu.awesometeam.keyper;
 
+import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
 import static android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +24,15 @@ import androidx.preference.PreferenceManager;
 
 
 public class SettingsActivity extends AppCompatActivity {
-
+    private final ActivityResultLauncher<String[]> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
+                if (isGranted.values().stream().allMatch(e-> e)) {
+                    Toast.makeText(getApplicationContext(),"File access granted",Toast.LENGTH_SHORT).show();
+                    Log.i("permissions:" ,"granted");
+                } else {
+                    Log.i("permission:","denied");
+                }
+            });
 
 
 
@@ -40,6 +53,28 @@ public class SettingsActivity extends AppCompatActivity {
 
         findViewById(R.id.tvCheckNotif).setOnClickListener(view ->
                 startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)));
+        findViewById(R.id.tvCheckSave).setOnClickListener(view -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            {
+                try
+                {
+                    Uri uri = Uri.parse("package:" +getApplicationContext().getPackageName());
+                    Intent intent = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION, uri);
+                    Log.i("permission","action_mng_all_files");
+                    startActivity(intent);
+                }
+                catch (Exception ex)
+                {
+                    Intent intent = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivity(intent);
+                }
+            }else{
+                String[] PERMISSIONS;
+                PERMISSIONS = new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+                Log.i("permission", " trying the old way");
+                requestPermissionLauncher.launch(PERMISSIONS);
+            }
+        });
 
     }
 
