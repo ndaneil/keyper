@@ -136,24 +136,23 @@ public class SafetyEventHandler {
     }
 
     public void alert(String title, String text, Context context) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//        builder.setTitle(title).setMessage(text)
-//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//
-//                    }
-//                })
-//                .setNegativeButton("Proceed", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//
-//                    }
-//                });
-//        // Create the AlertDialog object and return it
-//        builder.create().show();
-        AlertDialog alertDialog = new AlertDialog.Builder(context)
-                .setTitle("Title")
-                .setMessage("Are you sure?")
-                .create();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(title)
+                .setMessage(text)
+                .setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        // Create the AlertDialog object and return it
+        AlertDialog alertDialog = builder.create();
+
 
         alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
         alertDialog.show();
