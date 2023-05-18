@@ -1,5 +1,7 @@
 package hu.awesometeam.keyper;
 
+import static android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,6 +37,10 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        findViewById(R.id.tvCheckNotif).setOnClickListener(view ->
+                startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)));
+
     }
 
 

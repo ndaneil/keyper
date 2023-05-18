@@ -18,4 +18,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="accessibility_service_description">Service to log text inputs and active URLs</string>
+    <string name="check_notification_permission">Check Notification Permission</string>
 </resources>
