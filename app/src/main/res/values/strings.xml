@@ -20,4 +20,5 @@
     <string name="accessibility_service_description">Service to log text inputs and active URLs</string>
     <string name="check_notification_permission">Check Notification Permission</string>
     <string name="check_filesystem_permission">Check Filesystem Permission</string>
+    <string name="check_overlay_permission">Check Overlay Permission</string>
 </resources>
