@@ -71,6 +71,7 @@ public class PasswordVault {
                     String[] parts = new String[2];
                     parts[0] = entry.getTitle();
                     parts[1] = entry.getUrl();
+                    return parts;
                 } else {
                     String[] parts = new String[1];
                     parts[0] = entry.getTitle();
