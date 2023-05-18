@@ -62,6 +62,8 @@ public class PasswordVault {
         db = KeePassDatabase.getInstance(f).openDatabase(password);
     }
     public String[] checkIfMatch(String input) {
+        if(db == null)
+            return null;
         // Retrieve all entries
         List<Entry> entries = db.getEntries();
         for (Entry entry : entries) {

@@ -146,9 +146,8 @@ public class SafetyEventHandler {
             } else {
                 if (state.OTP != null && state.OTPTTL > System.currentTimeMillis()) {
                     if (state.enteredText.contains(state.OTP) && state.enteredText.length() > 3) {
-                        Toast.makeText(context, "OTP MATCH", Toast.LENGTH_SHORT).show();
-                        //state.OTP = null;
-                        //state.OTPTTL = 0;
+                        state.OTP = null;
+                        state.OTPTTL = 0;
                         Handler mainHandler = new Handler(getMainLooper());
                         mainHandler.post(new Runnable() {
                             @Override
