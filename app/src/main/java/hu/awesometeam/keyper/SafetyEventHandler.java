@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.regex.Matcher;
 
 public class SafetyEventHandler {
 
@@ -24,7 +25,8 @@ public class SafetyEventHandler {
         String enteredText;
         boolean shown = false;
         String matchString;
-
+        String OTP;
+        long OTPTTL;
         @Override
         public String toString() {
             return "InternalState{" +
@@ -77,6 +79,23 @@ public class SafetyEventHandler {
         Log.d("SEH", "PU " + state.toString());
     }
 
+    public void notificationEvent(String text, Context context) {
+        if(text == null ||(text.length()==0)) return;
+        if(text.toLowerCase().contains("code")){
+            if (text.matches(".*d{3}.*")){
+                Matcher m = java.util.regex.Pattern.compile("(\\d{3}[\\d\\-]*)").matcher(text);
+                if (m.find()) {
+                    state.OTP = m.group(1);
+                    state.OTPTTL = System.currentTimeMillis() + 120000;
+                    Toast.makeText(context, "Security code detected: " + state.OTP, Toast.LENGTH_SHORT).show();
+                }
+            }
+            ///
+        }
+
+
+    }
+
     public void checkAlertCondition(Context context) {
         Log.d("SEH", "CAC1 " + state.toString());
         if(state.enteredText.length() >= 3) {
@@ -85,7 +104,6 @@ public class SafetyEventHandler {
                 if (state.shown && Objects.equals(state.matchString, result[0])) {
                     return;
                 }
-
                 if (state.browserUrl != null && result.length > 1 && result[1] != null) {
                     URL url = null;
                     try {
@@ -121,12 +139,28 @@ public class SafetyEventHandler {
                     @Override
                     public void run() {
                         alert("Warning! You are about to send sensitive data", "The text you entered relates to " + state.matchString + ". Are you sure you want to enter it here?", context);
-                        Toast.makeText(context, "MATCH:" + result[0] + " package:" + state.packageName, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "MATCH:" + result[0] + " package:" + state.packageName, Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                state.shown = false;
-                state.matchString = null;
+                if(state.OTP != null && state.OTPTTL > System.currentTimeMillis()){
+                    if(state.enteredText.contains(state.OTP) && state.enteredText.length()>3){
+                        Toast.makeText(context, "OTP MATCH", Toast.LENGTH_SHORT).show();
+                        //state.OTP = null;
+                        //state.OTPTTL = 0;
+                        Handler mainHandler = new Handler(getMainLooper());
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                alert("Warning! You are about to send sensitive data", "The text you entered may be a contain a security code. Are you sure you want to send it?", context);
+                            }
+                        });
+                    }
+
+                } else {
+                    state.shown = false;
+                    state.matchString = null;
+                }
             }
         } else {
             state.shown = false;
