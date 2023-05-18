@@ -2,9 +2,12 @@ package hu.awesometeam.keyper;
 
 import static android.os.Looper.getMainLooper;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.net.MalformedURLException;
@@ -83,7 +86,7 @@ public class SafetyEventHandler {
                     return;
                 }
 
-                if (state.browserUrl != null && result.length > 1) {
+                if (state.browserUrl != null && result.length > 1 && result[1] != null) {
                     URL url = null;
                     try {
                         url = new URL(state.browserUrl);
@@ -91,7 +94,7 @@ public class SafetyEventHandler {
                         /**
                          * Hostname matching rules
                          */
-                        if (host.equals(state.browserUrl.toLowerCase())) {
+                        if (host.equals(result[1])) {
                             Toast.makeText(context, "URL match. skipping...", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -102,7 +105,7 @@ public class SafetyEventHandler {
                         /**
                          * Hostname matching rules
                          */
-                        if (state.browserUrl.equals(state.browserUrl.toLowerCase())) {
+                        if (state.browserUrl.length() > 4 && result[1].equals(state.browserUrl.toLowerCase())) {
                             Toast.makeText(context, "URL match. skipping...", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -117,6 +120,7 @@ public class SafetyEventHandler {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        alert("Warning! You are about to send sensitive data", "The text you entered relates to " + state.matchString + ". Are you sure you want to enter it here?", context);
                         Toast.makeText(context, "MATCH:" + result[0] + " package:" + state.packageName, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -131,7 +135,30 @@ public class SafetyEventHandler {
         Log.d("SEH", "CAC2 " + state.toString());
     }
 
+    public void alert(String title, String text, Context context) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        builder.setTitle(title).setMessage(text)
+//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//
+//                    }
+//                })
+//                .setNegativeButton("Proceed", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//
+//                    }
+//                });
+//        // Create the AlertDialog object and return it
+//        builder.create().show();
+        AlertDialog alertDialog = new AlertDialog.Builder(context)
+                .setTitle("Title")
+                .setMessage("Are you sure?")
+                .create();
 
+        alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        alertDialog.show();
+
+    }
 
 
 
