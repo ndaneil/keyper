@@ -32,7 +32,6 @@ public class PasswordVault {
         String uriString = sharedPref.getString("keepass_uri","");
         String pass = sharedPref.getString("pref_keepass_password","");
         //Uri uri = Uri.parse(uriString);
-        if(uriString.equals("")) throw new FileNotFoundException("Empty path");
         if(pass.equals("")) throw new FileNotFoundException("Empty password");
 
         String path = Environment.getExternalStorageDirectory() + File.separator + "keyper.kdbx";//Uri.decode(uriString).split("primary:")[1];

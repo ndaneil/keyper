@@ -33,6 +33,8 @@ public class SafetyService extends AccessibilityService {
             }
         }
         if(event.getEventType()== AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED){
+            AccessibilityNodeInfo rootNode = getRootInActiveWindow();
+            Log.d("AccService","rootNode.getText()" + rootNode.getText());
             SafetyEventHandler.getInstance(getApplicationContext())
                     .textUpdatedEvent(event.getText().toString(), getApplicationContext());
             Log.d("AccService", "TypedText: "+event.getText().toString());
