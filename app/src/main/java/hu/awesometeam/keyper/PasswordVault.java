@@ -38,7 +38,7 @@ public class PasswordVault {
         String path = Environment.getExternalStorageDirectory() + File.separator + Uri.decode(uriString).split("primary:")[1];
         File f = new File(path);
 
-        load(f, ctx, pass);
+        load(f, pass);
     }
 
     public static PasswordVault getInstance(Context context){
@@ -55,32 +55,18 @@ public class PasswordVault {
         return instance;
     }
 
-    private void load(File f, Context context, String password) throws FileNotFoundException {
-//        ParcelFileDescriptor pdf = context.getContentResolver().openFileDescriptor(uri, "r");
-//
-//        assert pdf != null;
-//        assert pdf.getStatSize() <= Integer.MAX_VALUE;
-//        byte[] data = new byte[(int) pdf.getStatSize()];
-//
-//        FileDescriptor fd = pdf.getFileDescriptor();
-//        FileInputStream fileStream = new FileInputStream(fd);
+    private void load(File f, String password) {
         db = KeePassDatabase.getInstance(f).openDatabase(password);
     }
-    public String checkIfMatch(String needed) {
+    public String checkIfMatch(String input) {
         // Retrieve all entries
         List<Entry> entries = db.getEntries();
         for (Entry entry : entries) {
-            if ((entry.getPassword() != null && entry.getPassword().equals(needed)) || (entry.getCustomProperties() != null && entry.getCustomProperties().stream().anyMatch(p -> p != null && p.getPropertyValue().getValue().equals(needed)))){
+            if ((entry.getPassword() != null && entry.getPassword().length() > 0 && input.contains(entry.getPassword()) || (entry.getCustomProperties() != null && entry.getCustomProperties().stream().anyMatch(p -> p != null && p.getPropertyValue().getValue().length() > 0 && input.contains(p.getPropertyValue().getValue()))))) {
                 return entry.getTitle();
             }
-            //Log.i("WOW","Title: " + entry.getTitle() + " Password: " + entry.getPassword());
         }
 
-        // Retrieve all top groups
-        List<Group> groups = db.getTopGroups();
-//        for (Group group : groups) {
-//            Log.i("WOW", group.getName());
-//        }
         return null;
     }
 }
