@@ -16,9 +16,9 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 
-public class SettingsActivity extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+public class SettingsActivity extends AppCompatActivity {
 
-    private static final int PICK_FILE = 2;
+    private static final int PICK_FILE = 20;
     PasswordVault vault;
 
 
@@ -42,27 +42,11 @@ public class SettingsActivity extends AppCompatActivity implements PreferenceFra
         }
     }
 
-    @Override
-    public boolean onPreferenceStartFragment(@NonNull PreferenceFragmentCompat caller, @NonNull Preference pref) {
-        if (pref.getKey().equals("pref_keepass_open")){
-            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType("*/*");
-                    startActivityForResult(intent, PICK_FILE);
-                    return true;
-                }
-            });
-        }
-        return true;
-    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {
-        super.onActivityResult(requestCode, resultCode, resultData);
         if (requestCode == PICK_FILE && resultCode == Activity.RESULT_OK) {
             // The result data contains a URI for the document or directory that
             // the user selected.
@@ -80,12 +64,25 @@ public class SettingsActivity extends AppCompatActivity implements PreferenceFra
                 }
             }
         }
+        super.onActivityResult(requestCode, resultCode, resultData);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+            Preference pref = findPreference("pref_keepass_open");
+            assert pref != null;
+            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(@NonNull Preference preference) {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("*/*");
+                    getActivity().startActivityForResult(intent, PICK_FILE);
+                    return true;
+                }
+            });
         }
     }
 }
