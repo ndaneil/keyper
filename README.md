@@ -29,6 +29,9 @@ Integration with other types of password banks is also on our agenda.
 - Clone the repo and build the app with Android Studio, or
 - Download the prebuilt APK file from [here](app/release/app-release.apk) and install it on your Android device
 
+
+You will need to enable installing applications downloaded from your browser of choice.
+
 The demo app expects an encrypted [keepass](https://keepass.info/) file at the root of the phone's internal storage with the name  `keyper.kdbx`.
 
 Enter the password in the app, grant the necessary permissions and turn on the accessibility service.
@@ -36,7 +39,7 @@ Enter the password in the app, grant the necessary permissions and turn on the a
 Keyper sends an alert if sensitive data is input into a field where it shouldn't.
 
 Keyper can also detect 2FA codes from SMS and treats these as sensitive as well.
-
+## As it is apparent from the source code, the demo version does has no network communication!
 
 ## Alerts you receive if you enter sensitive information to the wrong place:
 
