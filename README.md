@@ -39,7 +39,8 @@ Enter the password in the app, grant the necessary permissions and turn on the a
 Keyper sends an alert if sensitive data is input into a field where it shouldn't.
 
 Keyper can also detect 2FA codes from SMS and treats these as sensitive as well.
-## As it is apparent from the source code, the demo version does has no network communication!
+
+As it is apparent from the source code, the demo version does has no network communication!
 
 ## Alerts you receive if you enter sensitive information to the wrong place:
 
