@@ -1,4 +1,5 @@
-# KEYPER
+![logo](app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+# KEYPER 
 
 Have you ever opened a dangerous website and entered your password without noticing that it was not the real page you were looking for?
 Our project's focus was on increasing awereness about the ever growing problem of phishing (sites looking like the ones we use daily or people impersonating a trusted one asking for sensitive information). If this goes unnoticed then you might be giving out your precious data to fraudsters.
